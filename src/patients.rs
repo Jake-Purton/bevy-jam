@@ -1,4 +1,6 @@
-use bevy::prelude::*;
+use std::time::Duration;
+
+use bevy::{prelude::*, time::Stopwatch};
 use rand::prelude::*;
 
 pub enum Mutation {
@@ -37,11 +39,18 @@ pub struct Patient {
     temp: f32,
     ph: f32,
     o2: f32,
+    time_since_admission: Stopwatch,
+}
+
+impl Patient {
+    pub fn tick(&mut self, delta: Duration) {
+        self.time_since_admission.tick(delta);
+    }
 }
 
 #[derive(Resource)]
 pub struct PatientRes {
-    patients: Vec<Patient>,
+    pub patients: Vec<Patient>,
     patient_num: usize,
 }
 

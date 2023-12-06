@@ -5,6 +5,7 @@ mod main_menu;
 mod startup;
 mod gameplay;
 mod patients;
+mod update_patient;
 
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
