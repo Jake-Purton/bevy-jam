@@ -17,8 +17,5 @@ fn update_stopwatch (
     let dt = time.delta();
     for patient in &mut patients.patients {
         patient.time_since_admission.tick(dt);
-        if patient.time_since_admission.elapsed_secs() > 2.0 {
-            patient.bacteria.mutate()
-        }
     }
 }

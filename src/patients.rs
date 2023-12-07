@@ -33,7 +33,7 @@ pub struct Bacteria {
     // high = triangle
     // low = circle
     o2_mut: Mutation,
-    
+
     // lines = humid = high
     // no lines = not humid = low
     hm_mut: Mutation,
@@ -101,9 +101,6 @@ pub struct Patient {
 }
 
 impl Patient {
-    pub fn tick(&mut self, delta: Duration) {
-        self.time_since_admission.tick(delta);
-    }
     pub fn new_random() -> Self {
         Self { bacteria: Bacteria::new_random(), bacteria_num: 2.0, temp: 0.0, ph: 0.0, o2: 0.0, time_since_admission: Stopwatch::new() }
     }
