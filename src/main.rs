@@ -24,6 +24,7 @@ pub enum GameState {
 }
 
 fn main() {
+
     App::new()
         .add_state::<GameState>()
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
