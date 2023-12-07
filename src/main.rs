@@ -7,6 +7,7 @@ mod gameplay;
 mod patients;
 mod update_patient;
 
+// use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use gameplay::GameplayPlugin;
@@ -29,7 +30,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugins(MenuPlugin)
         .add_plugins((StartupPlugin, GameplayPlugin))
-        // .add_plugin(WorldInspectorPlugin::new())
+        // .add_plugins(WorldInspectorPlugin::new())
         // .add_plugin(RapierDebugRenderPlugin::default())
         .run();
 }

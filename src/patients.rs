@@ -31,6 +31,11 @@ pub struct Bacteria {
 impl Bacteria {
     fn mutate (&mut self) {
         self.temp_mut = Mutation::random();
+        self.ph_mut = Mutation::random();
+        self.o2_mut = Mutation::random();
+    }
+    pub fn new_random() -> Self {
+        Self { temp_mut: Mutation::random(), ph_mut: Mutation::random(), o2_mut: Mutation::random() }
     }
 }
 
@@ -46,30 +51,44 @@ impl Patient {
     pub fn tick(&mut self, delta: Duration) {
         self.time_since_admission.tick(delta);
     }
+    pub fn new_random() -> Self {
+        Self { bacteria: Bacteria::new_random(), temp: 0.0, ph: 0.0, o2: 0.0, time_since_admission: Stopwatch::new() }
+    }
 }
 
 #[derive(Resource)]
 pub struct PatientRes {
     pub patients: Vec<Patient>,
-    patient_num: usize,
+    patient_num: Option<usize>,
 }
 
 impl PatientRes {
-    fn new() -> Self {
-        PatientRes { patients: Vec::new(), patient_num: 0 }
+    pub fn new() -> Self {
+        PatientRes { patients: Vec::new(), patient_num: None }
     }
 
-    fn next_patient(&mut self) {
+    pub fn next_patient(&mut self) {
         if self.patients.len() >= 1 {
-            self.patient_num = (self.patient_num + 1) % self.patients.len();
+            
+            self.patient_num = Some((self.patient_num.unwrap() + 1) % self.patients.len());
         }
     }
 
-    fn get_patient (&mut self) -> Option<&mut Patient> {
+    pub fn get_patient (&mut self) -> Option<&mut Patient> {
         if self.patients.len() >= 1 {
-            Some(&mut self.patients[self.patient_num])
+            Some(&mut self.patients[self.patient_num.unwrap()])
         } else {
             None
         }
+    }
+
+    pub fn add_patient (&mut self) {
+        if let Some(a) = &mut self.patient_num {
+            *a += 1;
+        } else {
+            self.patient_num = Some(0);
+        }
+        self.patients.push(Patient::new_random()) 
+
     }
 }
