@@ -1,4 +1,4 @@
-use bevy::{prelude::*, math::vec2};
+use bevy::prelude::*;
 use rand::Rng;
 
 use crate::{patients::PatientRes, GameState, SCREEN_SIZE, gameplay::BacteriaComponent, SCREEN_CENTRE};
@@ -31,11 +31,11 @@ fn update_bacteria_velocities (
 
         if t.translation.x > (SCREEN_SIZE.x / 2.0) + SCREEN_CENTRE.x {
 
-            b.velocity.x = -(b.velocity.x.abs())
+            b.velocity.x = -(b.velocity.x.abs() + 10.0)
 
         } else if -t.translation.x > (SCREEN_SIZE.x / 2.0) - SCREEN_CENTRE.x{
 
-            b.velocity.x = b.velocity.x.abs()
+            b.velocity.x = b.velocity.x.abs() + 10.0
 
         } else {
 
@@ -46,13 +46,13 @@ fn update_bacteria_velocities (
 
         if t.translation.y > (SCREEN_SIZE.y / 2.0) + SCREEN_CENTRE.y {
 
-            b.velocity.y = -(b.velocity.y.abs())
+            b.velocity.y = -(b.velocity.y.abs() + 10.0)
             // move back to centre
 
         } else if -t.translation.y > (SCREEN_SIZE.y / 2.0 ) - SCREEN_CENTRE.y{
 
             // move back to centre
-            b.velocity.y = b.velocity.y.abs()
+            b.velocity.y = b.velocity.y.abs() + 10.0
 
         } else {
             let y = rng.gen_range(-60.0..60.0);

@@ -64,7 +64,6 @@ fn display_bacteria (
                     let x: f32 = rng.gen_range(-700.0..=700.0);
                     let y: f32 = rng.gen_range(SCREEN_CENTRE.y - 400.0..=SCREEN_CENTRE.y + 400.0);
 
-                    println!("spawn bacterium");
                     cmd.spawn((
                         SpriteSheetBundle {
                             texture_atlas: gt.bacteria.clone(),
@@ -101,7 +100,6 @@ fn setup_camera (
 ) {
     cmd.spawn(Camera2dBundle::default());
     cmd.insert_resource(ClearColor(BACKGROUND_COLOUR));
-
 }
 
 fn setup_sprites (
@@ -128,4 +126,32 @@ fn setup_sprites (
             ..default()
         },
     ));
+
+    cmd.spawn((
+        SpriteSheetBundle {
+            texture_atlas: gt.arrow_left.clone(),
+            sprite: TextureAtlasSprite::new(0),
+            transform: Transform::from_translation(Vec3::new(200.0, -445.0, 20.0)),
+            ..default()
+        },
+    ));
+
+    cmd.spawn((
+        SpriteSheetBundle {
+            texture_atlas: gt.arrow_right.clone(),
+            sprite: TextureAtlasSprite::new(0),
+            transform: Transform::from_translation(Vec3::new(280.0, -445.0, 20.0)),
+            ..default()
+        },
+    ));
+
+    cmd.spawn((
+        SpriteSheetBundle {
+            texture_atlas: gt.button_slider.clone(),
+            sprite: TextureAtlasSprite::new(0),
+            transform: Transform::from_translation(Vec3::new(100.0, 0.0, 20.0)),
+            ..default()
+        },
+    ));
+    
 }

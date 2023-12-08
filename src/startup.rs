@@ -23,6 +23,9 @@ pub struct GameTextures {
     pub bacteria: Handle<TextureAtlas>,
     pub monitor: Handle<Image>,
     pub monitor_bg: Handle<Image>,
+    pub arrow_left: Handle<TextureAtlas>,
+    pub arrow_right: Handle<TextureAtlas>,
+    pub button_slider: Handle<TextureAtlas>,
 }
 
 fn setup_textures (
@@ -38,11 +41,28 @@ fn setup_textures (
     let mon_handle = asset_server.load("monitor.png");
     let mon_bg = asset_server.load("screen.png");
 
+    let leftarr_handle = asset_server.load("arrow_left-sheet.png");
+    let leftarr_atlas =
+        TextureAtlas::from_grid(leftarr_handle, Vec2::new(40.0, 48.0), 2, 1, None, None);
+    let leftarr_atlas_handle = texture_atlases.add(leftarr_atlas);
+
+    let rightarr_handle = asset_server.load("arrow_right-sheet.png");
+    let rightarr_atlas =
+        TextureAtlas::from_grid(rightarr_handle, Vec2::new(40.0, 48.0), 2, 1, None, None);
+    let rightarr_atlas_handle = texture_atlases.add(rightarr_atlas);
+
+    let slider_handle = asset_server.load("button_slider-sheet.png");
+    let slider_atlas =
+        TextureAtlas::from_grid(slider_handle, Vec2::new(92.0, 36.0), 2, 1, None, None);
+    let slider_atlas_handle = texture_atlases.add(slider_atlas);
 
     let gt = GameTextures {
         bacteria: bt_atlas_handle,
         monitor: mon_handle,
         monitor_bg: mon_bg,
+        arrow_left: leftarr_atlas_handle,
+        arrow_right: rightarr_atlas_handle,
+        button_slider: slider_atlas_handle,
     };
 
     cmd.insert_resource(gt);
