@@ -9,12 +9,14 @@ mod update_patient;
 
 // use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::*;
 use gameplay::GameplayPlugin;
 use main_menu::MenuPlugin;
 use startup::StartupPlugin;
 
 const BACKGROUND_COLOUR: Color = Color::rgb(0.05, 0.0, 0.1);
+const SCREEN_CENTRE: Vec2 = Vec2::new(0.0, 120.0);
+const SCREEN_SIZE: Vec2 = Vec2::new(944.0, 600.0);
+// const SCREEN_SIZE: Vec2 = Vec2::new(20.0, 20.0);
 
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum GameState {
@@ -27,7 +29,6 @@ fn main() {
 
     App::new()
         .add_state::<GameState>()
-        .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugins(DefaultPlugins)
         .add_plugins(MenuPlugin)
         .add_plugins((StartupPlugin, GameplayPlugin))

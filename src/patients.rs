@@ -1,5 +1,3 @@
-use std::time::Duration;
-
 use bevy::{prelude::*, time::Stopwatch};
 use rand::prelude::*;
 
@@ -102,7 +100,7 @@ pub struct Patient {
 
 impl Patient {
     pub fn new_random() -> Self {
-        Self { bacteria: Bacteria::new_random(), bacteria_num: 2.0, temp: 0.0, ph: 0.0, o2: 0.0, time_since_admission: Stopwatch::new() }
+        Self { bacteria: Bacteria::new_random(), bacteria_num: 10.0, temp: 0.0, ph: 0.0, o2: 0.0, time_since_admission: Stopwatch::new() }
     }
     pub fn get_bact_num(&self) -> f32 {
         self.bacteria_num.clone()

@@ -14,7 +14,7 @@ fn set_res(
     let mut window = windows.single_mut();
 
     window.resolution.set(1600.0, 1080.0);
-    window.resizable = false;
+    window.resizable = true;
 
 }
 

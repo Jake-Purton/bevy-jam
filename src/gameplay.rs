@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
-use crate::{GameState, BACKGROUND_COLOUR, startup::GameTextures, update_patient::UpdatePlugin, patients::PatientRes};
+use crate::{GameState, BACKGROUND_COLOUR, SCREEN_CENTRE, startup::GameTextures, update_patient::UpdatePlugin, patients::PatientRes};
+use rand::Rng;
 
 pub struct GameplayPlugin;
 
@@ -16,8 +17,8 @@ impl Plugin for GameplayPlugin {
 }
 
 #[derive(Component)]
-struct BacteriaComponent {
-    velocity: Vec2,
+pub struct BacteriaComponent {
+    pub velocity: Vec2,
     current_atlas: usize,
     patient_parent: usize,
 }
@@ -30,6 +31,7 @@ fn display_bacteria (
     time: Res<Time>
 ) {
 
+    let mut rng = rand::thread_rng();
     let mut count = 0;
 
     if let Some(c) = pts.get_patient_num() {
@@ -59,12 +61,15 @@ fn display_bacteria (
             if diff > 0 {
                 for _ in 0..diff {
 
+                    let x: f32 = rng.gen_range(-700.0..=700.0);
+                    let y: f32 = rng.gen_range(SCREEN_CENTRE.y - 400.0..=SCREEN_CENTRE.y + 400.0);
+
                     println!("spawn bacterium");
                     cmd.spawn((
                         SpriteSheetBundle {
                             texture_atlas: gt.bacteria.clone(),
                             sprite: TextureAtlasSprite::new(0),
-                            transform: Transform::from_translation(Vec3::new(0.0, 0.0, 5.0)),
+                            transform: Transform::from_translation(Vec3::new(x, y, 5.0)),
                             ..default()
                         },
                         BacteriaComponent {
