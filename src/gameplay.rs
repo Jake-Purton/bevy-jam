@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{GameState, BACKGROUND_COLOUR, SCREEN_CENTRE, startup::GameTextures, update_patient::UpdatePlugin, patients::PatientRes};
+use crate::{GameState, BACKGROUND_COLOUR, SCREEN_CENTRE, startup::GameTextures, update_patient::UpdatePlugin, patients::PatientRes, ui::{MyButton, Slider}};
 use rand::Rng;
 
 pub struct GameplayPlugin;
@@ -134,6 +134,9 @@ fn setup_sprites (
             transform: Transform::from_translation(Vec3::new(200.0, -445.0, 20.0)),
             ..default()
         },
+        MyButton {
+            size: Vec2::new(40.0, 48.0),
+        },
     ));
 
     cmd.spawn((
@@ -143,6 +146,9 @@ fn setup_sprites (
             transform: Transform::from_translation(Vec3::new(280.0, -445.0, 20.0)),
             ..default()
         },
+        MyButton {
+            size: Vec2::new(40.0, 48.0),
+        },
     ));
 
     cmd.spawn((
@@ -151,6 +157,9 @@ fn setup_sprites (
             sprite: TextureAtlasSprite::new(0),
             transform: Transform::from_translation(Vec3::new(100.0, 0.0, 20.0)),
             ..default()
+        },
+        Slider {
+            size: Vec2::new(92.0, 36.0)
         },
     ));
     
