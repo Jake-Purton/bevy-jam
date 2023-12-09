@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::WINDOW_SIZE;
+
 pub struct StartupPlugin;
 
 impl Plugin for StartupPlugin {
@@ -13,7 +15,7 @@ fn set_res(
 ) {
     let mut window = windows.single_mut();
 
-    window.resolution.set(1600.0, 1080.0);
+    window.resolution.set(WINDOW_SIZE.x, WINDOW_SIZE.y);
     window.resizable = true;
 
 }

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{GameState, BACKGROUND_COLOUR, SCREEN_CENTRE, startup::GameTextures, update_patient::UpdatePlugin, patients::PatientRes, ui::{MyButton, Slider}};
+use crate::{GameState, BACKGROUND_COLOUR, SCREEN_CENTRE, startup::GameTextures, update_patient::UpdatePlugin, patients::PatientRes, ui::{MyButton, Slider, ButtonAction}};
 use rand::Rng;
 
 pub struct GameplayPlugin;
@@ -93,6 +93,8 @@ fn add_patient (
     mut pts: ResMut<PatientRes>,
 ) {
     pts.add_patient();
+    pts.add_patient();
+    pts.add_patient();
 }
 
 fn setup_camera (
@@ -136,6 +138,7 @@ fn setup_sprites (
         },
         MyButton {
             size: Vec2::new(40.0, 48.0),
+            action: ButtonAction::Left,
         },
     ));
 
@@ -148,6 +151,7 @@ fn setup_sprites (
         },
         MyButton {
             size: Vec2::new(40.0, 48.0),
+            action: ButtonAction::Right,
         },
     ));
 

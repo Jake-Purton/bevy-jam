@@ -129,6 +129,16 @@ impl PatientRes {
         }
     }
 
+    pub fn previous_patient(&mut self) {
+
+        let a = self.patients.len();
+
+        if a >= 1 {
+            
+            self.patient_num = Some((self.patient_num.unwrap() + (a-1)) % a);
+        }
+    }
+
     pub fn get_patient (&mut self) -> Option<&mut Patient> {
         if self.patients.len() >= 1 {
             Some(&mut self.patients[self.patient_num.unwrap()])
