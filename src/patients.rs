@@ -1,6 +1,8 @@
 use bevy::{prelude::*, time::Stopwatch};
 use rand::prelude::*;
 
+use crate::SLIDER_TOP_Y;
+
 #[derive(Debug)]
 pub enum Mutation {
     High,
@@ -92,15 +94,24 @@ impl Bacteria {
 pub struct Patient {
     pub bacteria: Bacteria,
     bacteria_num: f32,
-    temp: f32,
-    ph: f32,
-    o2: f32,
+    pub temp: f32,
+    pub ph: f32,
+    pub o2: f32,
+    pub humidity: f32,
     pub time_since_admission: Stopwatch,
 }
 
 impl Patient {
     pub fn new_random() -> Self {
-        Self { bacteria: Bacteria::new_random(), bacteria_num: 10.0, temp: 0.0, ph: 0.0, o2: 0.0, time_since_admission: Stopwatch::new() }
+        Self { 
+            bacteria: Bacteria::new_random(), 
+            bacteria_num: 10.0, 
+            temp: SLIDER_TOP_Y, 
+            ph: SLIDER_TOP_Y, 
+            o2: SLIDER_TOP_Y, 
+            humidity: SLIDER_TOP_Y, 
+            time_since_admission: Stopwatch::new() 
+        }
     }
     pub fn get_bact_num(&self) -> f32 {
         self.bacteria_num.clone()

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{GameState, BACKGROUND_COLOUR, SCREEN_CENTRE, startup::GameTextures, update_patient::UpdatePlugin, patients::PatientRes, ui::{MyButton, Slider, ButtonAction}};
+use crate::{GameState, BACKGROUND_COLOUR, SCREEN_CENTRE, startup::GameTextures, update_patient::UpdatePlugin, patients::PatientRes, ui::{MyButton, Slider, ButtonAction, SliderType}};
 use rand::Rng;
 
 pub struct GameplayPlugin;
@@ -159,11 +159,51 @@ fn setup_sprites (
         SpriteSheetBundle {
             texture_atlas: gt.button_slider.clone(),
             sprite: TextureAtlasSprite::new(0),
-            transform: Transform::from_translation(Vec3::new(100.0, 0.0, 20.0)),
+            transform: Transform::from_translation(Vec3::new(-510.0, -361.0, 20.0)),
             ..default()
         },
         Slider {
-            size: Vec2::new(92.0, 36.0)
+            size: Vec2::new(92.0, 36.0),
+            stype: SliderType::Temp,
+        },
+    ));
+
+    cmd.spawn((
+        SpriteSheetBundle {
+            texture_atlas: gt.button_slider.clone(),
+            sprite: TextureAtlasSprite::new(0),
+            transform: Transform::from_translation(Vec3::new(-382.0, -361.0, 20.0)),
+            ..default()
+        },
+        Slider {
+            size: Vec2::new(92.0, 36.0),
+            stype: SliderType::O2,
+        },
+    ));
+
+    cmd.spawn((
+        SpriteSheetBundle {
+            texture_atlas: gt.button_slider.clone(),
+            sprite: TextureAtlasSprite::new(0),
+            transform: Transform::from_translation(Vec3::new(-254.0, -361.0, 20.0)),
+            ..default()
+        },
+        Slider {
+            size: Vec2::new(92.0, 36.0),
+            stype: SliderType::Ph,
+        },
+    ));
+
+    cmd.spawn((
+        SpriteSheetBundle {
+            texture_atlas: gt.button_slider.clone(),
+            sprite: TextureAtlasSprite::new(0),
+            transform: Transform::from_translation(Vec3::new(-126.0, -482.0, 20.0)),
+            ..default()
+        },
+        Slider {
+            size: Vec2::new(92.0, 36.0),
+            stype: SliderType::Humidity,
         },
     ));
     
