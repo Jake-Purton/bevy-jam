@@ -21,6 +21,8 @@ const SCREEN_SIZE: Vec2 = Vec2::new(944.0, 600.0);
 const WINDOW_SIZE: Vec2 = Vec2::new(1600.0, 1080.0);
 const SLIDER_TOP_Y: f32 = -361.0;
 const SLIDER_BOTTOM_Y: f32 = -482.0;
+const GROWTH_RATE: f32 = 1.0;
+const DIMINISH_RATE: f32 = 1.0;
 // (min_x, max_x, type)
 const SLIDER_POSITIONS: [(f32, f32, SliderType); 4] = [
     (-510.0-46.0, 46.0-510.0, SliderType::Temp), 

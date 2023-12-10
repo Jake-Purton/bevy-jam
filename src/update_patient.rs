@@ -1,13 +1,15 @@
+use std::time::Duration;
+
 use bevy::prelude::*;
 use rand::Rng;
 
-use crate::{patients::PatientRes, GameState, SCREEN_SIZE, gameplay::BacteriaComponent, SCREEN_CENTRE};
+use crate::{patients::PatientRes, GameState, SCREEN_SIZE, gameplay::BacteriaComponent, SCREEN_CENTRE, GROWTH_RATE, DIMINISH_RATE};
 
 pub struct UpdatePlugin;
 
 impl Plugin for UpdatePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (update_stopwatch, update_bacteria_velocities).run_if(in_state(GameState::Gameplay)));
+        app.add_systems(Update, (update_stopwatch, update_bacteria_velocities, update_bct_num).run_if(in_state(GameState::Gameplay)));
     }
 }
 
@@ -15,10 +17,71 @@ fn update_stopwatch (
     mut patients: ResMut<PatientRes>,
     time: Res<Time>,
 ) {
+
+    let mut rng = rand::thread_rng();
+
     let dt = time.delta();
     for patient in &mut patients.patients {
         patient.time_since_admission.tick(dt);
+        patient.mutation_timer.tick(dt);
+
+        if patient.mutation_timer.just_finished() {
+            patient.bacteria.mutate();
+
+            let duration = Duration::from_millis(rng.gen_range(10000..20000));
+
+            patient.mutation_timer = Timer::new(duration, TimerMode::Once)
+        }
+
     }
+}
+
+fn update_bct_num (
+    mut patients: ResMut<PatientRes>,
+    time: Res<Time>,
+) {
+
+    for patient in patients.patients.iter_mut() {
+        let a = patient.get_sliders();
+
+        let mut delta_b = 0.0;
+
+        if a.temp_mut == patient.bacteria.temp_mut {
+
+            delta_b -= DIMINISH_RATE;
+
+        } else {
+            delta_b += GROWTH_RATE;
+        }
+
+        if a.hm_mut == patient.bacteria.hm_mut {
+            delta_b -= DIMINISH_RATE;
+        } else {
+            delta_b += GROWTH_RATE;
+        }
+
+        if a.ph_mut == patient.bacteria.ph_mut {
+
+            delta_b -= DIMINISH_RATE;
+
+        } else {
+            delta_b += GROWTH_RATE;
+        }
+
+        if a.o2_mut == patient.bacteria.o2_mut {
+
+            delta_b -= DIMINISH_RATE;
+
+        } else {
+            delta_b += GROWTH_RATE;
+        }
+
+        let dt = time.delta_seconds();
+
+        patient.bacteria_num += delta_b * dt;
+        
+    }
+
 }
 
 fn update_bacteria_velocities (

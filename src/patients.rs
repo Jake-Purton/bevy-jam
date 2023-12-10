@@ -1,11 +1,14 @@
+use std::time::Duration;
+
 use bevy::{prelude::*, time::Stopwatch};
 use rand::prelude::*;
 
-use crate::SLIDER_TOP_Y;
+use crate::{SLIDER_TOP_Y, SLIDER_BOTTOM_Y};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Mutation {
     High,
+    None,
     Low,
 }
 
@@ -24,19 +27,19 @@ impl Mutation {
 pub struct Bacteria {
     // high = hot
     // low = cold
-    temp_mut: Mutation,
+    pub temp_mut: Mutation,
 
     // high = red
     // low = blue
-    ph_mut: Mutation,
+    pub ph_mut: Mutation,
 
     // high = triangle
     // low = circle
-    o2_mut: Mutation,
+    pub o2_mut: Mutation,
 
     // lines = humid = high
     // no lines = not humid = low
-    hm_mut: Mutation,
+    pub hm_mut: Mutation,
 }
 
 impl Bacteria {
@@ -93,12 +96,13 @@ impl Bacteria {
 
 pub struct Patient {
     pub bacteria: Bacteria,
-    bacteria_num: f32,
+    pub bacteria_num: f32,
     pub temp: f32,
     pub ph: f32,
     pub o2: f32,
     pub humidity: f32,
     pub time_since_admission: Stopwatch,
+    pub mutation_timer: Timer,
 }
 
 impl Patient {
@@ -110,12 +114,39 @@ impl Patient {
             ph: SLIDER_TOP_Y, 
             o2: SLIDER_TOP_Y, 
             humidity: SLIDER_TOP_Y, 
-            time_since_admission: Stopwatch::new() 
+            time_since_admission: Stopwatch::new() ,
+            mutation_timer: Timer::new(Duration::from_secs(10), TimerMode::Once),
         }
     }
     pub fn get_bact_num(&self) -> f32 {
         self.bacteria_num.clone()
     }
+
+    pub fn turn_values_into_enum (val: f32) -> Mutation {
+
+        let a =  (val - SLIDER_BOTTOM_Y) / (SLIDER_TOP_Y - SLIDER_BOTTOM_Y);
+
+        if a < 0.33 {
+            Mutation::Low
+        } else if a < 0.66 {
+            Mutation::None
+        } else {
+            Mutation::High
+        }
+
+    }
+
+    pub fn get_sliders(&self) -> Bacteria {
+
+        Bacteria {
+            temp_mut: Self::turn_values_into_enum(self.temp),
+            ph_mut: Self::turn_values_into_enum(self.ph),
+            o2_mut: Self::turn_values_into_enum(self.o2),
+            hm_mut: Self::turn_values_into_enum(self.humidity),
+        }
+
+    }
+
     // beatles refrence for dan (get back)
     pub fn get_bact_code (&self) -> usize {
         self.bacteria.code()

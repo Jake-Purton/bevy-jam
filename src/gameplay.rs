@@ -56,9 +56,14 @@ fn display_bacteria (
 
         if let Some(pt) = pts.get_patient() {
 
-            let diff = (pt.get_bact_num().floor() as u32) -(count as u32);
+            let diff = (pt.get_bact_num().round() as i32) -(count as i32);
+
+            // println!("pt count: {count}");
+            // println!("pt b num: {}", pt.get_bact_num());
+            // println!("pt diff: {diff}");
 
             if diff > 0 {
+
                 for _ in 0..diff {
 
                     let x: f32 = rng.gen_range(-700.0..=700.0);
@@ -77,6 +82,17 @@ fn display_bacteria (
                             patient_parent: c,
                         }
                     ));
+                }
+            } else if diff < 0 {
+
+                let mut count = 1;
+                for (entity, _, _, _) in bct.iter() {
+                    if count <= diff.abs() {
+                        cmd.entity(entity).despawn();
+                    }
+
+                    count += 1;
+
                 }
             }
 

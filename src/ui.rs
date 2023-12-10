@@ -1,5 +1,3 @@
-use std::cmp;
-
 use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::{GameState, WINDOW_SIZE, patients::PatientRes, SLIDER_POSITIONS, SLIDER_BOTTOM_Y, SLIDER_TOP_Y};
