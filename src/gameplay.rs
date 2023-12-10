@@ -64,6 +64,8 @@ fn display_bacteria (
 
             if diff > 0 {
 
+                println!("INCREASING");
+
                 for _ in 0..diff {
 
                     let x: f32 = rng.gen_range(-700.0..=700.0);
@@ -84,6 +86,8 @@ fn display_bacteria (
                     ));
                 }
             } else if diff < 0 {
+
+                println!("DECREASING");
 
                 let mut count = 1;
                 for (entity, _, _, _) in bct.iter() {

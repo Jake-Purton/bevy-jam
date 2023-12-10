@@ -72,11 +72,9 @@ impl Bacteria {
         };
 
         let o2: usize = if matches!(self.o2_mut, Mutation::High) {
-            // high oxygen / triangular
-            1
-        } else {
-            // low oxygen / circular
             0
+        } else {
+            1
         };
 
         let hm: usize = if matches!(self.hm_mut, Mutation::High) {
@@ -187,6 +185,22 @@ impl PatientRes {
         } else {
             None
         }
+    }
+
+    pub fn remove_patient(&mut self, a: usize) {
+
+        self.patients.remove(a);
+        let b = self.patients.len();
+
+        if self.patient_num.unwrap() >= a {
+            self.patient_num = Some(0)
+        }
+
+        if b == 0 {
+            self.patient_num = None
+        }
+
+
     }
 
     pub fn get_patient_num(&self) -> Option<usize> {

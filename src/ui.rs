@@ -112,7 +112,6 @@ fn move_slider (
             },
         }
     }
-
 }
 
 fn slider_system (

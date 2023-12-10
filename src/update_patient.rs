@@ -41,13 +41,19 @@ fn update_bct_num (
     time: Res<Time>,
 ) {
 
-    for patient in patients.patients.iter_mut() {
+    let mut vec = Vec::new();
+    let mut temp: [f32; 3] = [100.0, 100.0, 100.0];
+
+    for (i, patient) in patients.patients.iter_mut().enumerate() {
         let a = patient.get_sliders();
 
         let mut delta_b = 0.0;
 
         if a.temp_mut == patient.bacteria.temp_mut {
+            if i == 2 {
 
+                println!("temp matches");
+            }
             delta_b -= DIMINISH_RATE;
 
         } else {
@@ -55,13 +61,20 @@ fn update_bct_num (
         }
 
         if a.hm_mut == patient.bacteria.hm_mut {
+            if i == 2 {
+
+                println!("hm matches");
+            }
             delta_b -= DIMINISH_RATE;
         } else {
             delta_b += GROWTH_RATE;
         }
 
         if a.ph_mut == patient.bacteria.ph_mut {
+            if i ==2 {
 
+                println!("ph matches");
+            }
             delta_b -= DIMINISH_RATE;
 
         } else {
@@ -70,6 +83,10 @@ fn update_bct_num (
 
         if a.o2_mut == patient.bacteria.o2_mut {
 
+            if i == 2 {
+
+                println!("o2 matches");
+            }
             delta_b -= DIMINISH_RATE;
 
         } else {
@@ -78,9 +95,21 @@ fn update_bct_num (
 
         let dt = time.delta_seconds();
 
+        temp[i] = delta_b;
+
         patient.bacteria_num += delta_b * dt;
-        
+
+        if patient.bacteria_num <= 0.0 {
+            vec.push(i);
+        }
     }
+
+    for i in vec {
+        println!("removing patient {}. bact_num: {}", i, patients.patients[i].bacteria_num);
+        patients.remove_patient(i);
+    }
+
+    println!("{}, {}", temp[patients.get_patient_num().unwrap()], patients.get_patient_num().unwrap());
 
 }
 
