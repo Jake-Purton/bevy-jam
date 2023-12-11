@@ -3,7 +3,7 @@ use std::time::Duration;
 use bevy::{prelude::*, time::Stopwatch};
 use rand::prelude::*;
 
-use crate::{SLIDER_TOP_Y, SLIDER_BOTTOM_Y};
+use crate::{SLIDER_TOP_Y, SLIDER_BOTTOM_Y, SLIDER_MIDDLE};
 
 #[derive(Debug, PartialEq)]
 pub enum Mutation {
@@ -108,10 +108,10 @@ impl Patient {
         Self { 
             bacteria: Bacteria::new_random(), 
             bacteria_num: 10.0, 
-            temp: SLIDER_TOP_Y, 
-            ph: SLIDER_TOP_Y, 
-            o2: SLIDER_TOP_Y, 
-            humidity: SLIDER_TOP_Y, 
+            temp: SLIDER_MIDDLE, 
+            ph: SLIDER_MIDDLE, 
+            o2: SLIDER_MIDDLE, 
+            humidity: SLIDER_MIDDLE, 
             time_since_admission: Stopwatch::new() ,
             mutation_timer: Timer::new(Duration::from_secs(10), TimerMode::Once),
         }
@@ -153,13 +153,14 @@ impl Patient {
 
 #[derive(Resource)]
 pub struct PatientRes {
-    pub patients: Vec<Patient>,
+    pub patients: Vec<Option<Patient>>,
     patient_num: Option<usize>,
+    total: usize,
 }
 
 impl PatientRes {
     pub fn new() -> Self {
-        PatientRes { patients: Vec::new(), patient_num: None }
+        PatientRes { patients: Vec::new(), patient_num: None, total: 0 }
     }
 
     pub fn next_patient(&mut self) {
@@ -180,8 +181,12 @@ impl PatientRes {
     }
 
     pub fn get_patient (&mut self) -> Option<&mut Patient> {
-        if self.patients.len() >= 1 {
-            Some(&mut self.patients[self.patient_num.unwrap()])
+        if let Some(a) = self.patient_num {
+            if let Some(b) = &mut self.patients[a] {
+                Some(b)
+            } else {
+                None
+            }
         } else {
             None
         }
@@ -213,6 +218,7 @@ impl PatientRes {
         } else {
             self.patient_num = Some(0);
         }
-        self.patients.push(Patient::new_random()) 
+        self.patients.push(Some(Patient::new_random())) ;
+        self.total += 1;
     }
 }

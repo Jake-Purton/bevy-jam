@@ -109,12 +109,52 @@ fn display_bacteria (
     }
 }
 
+#[derive(Component)]
+pub struct RBTGBT {
+    player: usize,
+}
+
 fn add_patient (
     mut pts: ResMut<PatientRes>,
+    gt: Res<GameTextures>,
+    mut cmd: Commands,
 ) {
     pts.add_patient();
     pts.add_patient();
     pts.add_patient();
+
+    cmd.spawn((
+        SpriteBundle {
+            texture: gt.red_light.clone(),
+            transform: Transform {
+                translation: Vec3::new(32.0, 440.0, 30.0),
+                ..Default::default()
+            },
+            ..default()
+        },
+    ));
+
+    cmd.spawn((
+        SpriteBundle {
+            texture: gt.red_light.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, 440.0, 30.0),
+                ..Default::default()
+            },
+            ..default()
+        },
+    ));
+
+    cmd.spawn((
+        SpriteBundle {
+            texture: gt.red_light.clone(),
+            transform: Transform {
+                translation: Vec3::new(-32.0, 440.0, 30.0),
+                ..Default::default()
+            },
+            ..default()
+        },
+    ));
 }
 
 fn setup_camera (

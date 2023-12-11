@@ -24,6 +24,8 @@ fn set_res(
 pub struct GameTextures {
     pub bacteria: Handle<TextureAtlas>,
     pub monitor: Handle<Image>,
+    pub red_light: Handle<Image>,
+    pub green_light: Handle<Image>,
     pub monitor_bg: Handle<Image>,
     pub arrow_left: Handle<TextureAtlas>,
     pub arrow_right: Handle<TextureAtlas>,
@@ -58,6 +60,9 @@ fn setup_textures (
         TextureAtlas::from_grid(slider_handle, Vec2::new(92.0, 36.0), 2, 1, None, None);
     let slider_atlas_handle = texture_atlases.add(slider_atlas);
 
+    let rbt = asset_server.load("red_light.png");
+    let gbt = asset_server.load("green_light.png");
+
     let gt = GameTextures {
         bacteria: bt_atlas_handle,
         monitor: mon_handle,
@@ -65,6 +70,8 @@ fn setup_textures (
         arrow_left: leftarr_atlas_handle,
         arrow_right: rightarr_atlas_handle,
         button_slider: slider_atlas_handle,
+        red_light: rbt,
+        green_light: gbt,
     };
 
     cmd.insert_resource(gt);

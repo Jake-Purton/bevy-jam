@@ -22,15 +22,18 @@ fn update_stopwatch (
 
     let dt = time.delta();
     for patient in &mut patients.patients {
-        patient.time_since_admission.tick(dt);
-        patient.mutation_timer.tick(dt);
+        if let Some(patient) = patient {
 
-        if patient.mutation_timer.just_finished() {
-            patient.bacteria.mutate();
-
-            let duration = Duration::from_millis(rng.gen_range(10000..20000));
-
-            patient.mutation_timer = Timer::new(duration, TimerMode::Once)
+            patient.time_since_admission.tick(dt);
+            patient.mutation_timer.tick(dt);
+    
+            if patient.mutation_timer.just_finished() {
+                patient.bacteria.mutate();
+    
+                let duration = Duration::from_millis(rng.gen_range(10000..20000));
+    
+                patient.mutation_timer = Timer::new(duration, TimerMode::Once)
+            }
         }
 
     }
@@ -39,77 +42,75 @@ fn update_stopwatch (
 fn update_bct_num (
     mut patients: ResMut<PatientRes>,
     time: Res<Time>,
+    mut gs: ResMut<NextState<GameState>>,
 ) {
 
     let mut vec = Vec::new();
     let mut temp: [f32; 3] = [100.0, 100.0, 100.0];
 
     for (i, patient) in patients.patients.iter_mut().enumerate() {
-        let a = patient.get_sliders();
+        if let Some(patient) = patient {
 
-        let mut delta_b = 0.0;
-
-        if a.temp_mut == patient.bacteria.temp_mut {
-            if i == 2 {
-
-                println!("temp matches");
+            let a = patient.get_sliders();
+    
+            let mut delta_b = 0.0;
+    
+            if a.temp_mut == patient.bacteria.temp_mut {
+                delta_b -= DIMINISH_RATE;
+    
+            } else {
+                delta_b += GROWTH_RATE;
             }
-            delta_b -= DIMINISH_RATE;
-
-        } else {
-            delta_b += GROWTH_RATE;
-        }
-
-        if a.hm_mut == patient.bacteria.hm_mut {
-            if i == 2 {
-
-                println!("hm matches");
+    
+            if a.hm_mut == patient.bacteria.hm_mut {
+    
+                delta_b -= DIMINISH_RATE;
+            } else {
+                delta_b += GROWTH_RATE;
             }
-            delta_b -= DIMINISH_RATE;
-        } else {
-            delta_b += GROWTH_RATE;
-        }
-
-        if a.ph_mut == patient.bacteria.ph_mut {
-            if i ==2 {
-
-                println!("ph matches");
+    
+            if a.ph_mut == patient.bacteria.ph_mut {
+    
+                delta_b -= DIMINISH_RATE;
+    
+            } else {
+                delta_b += GROWTH_RATE;
             }
-            delta_b -= DIMINISH_RATE;
-
-        } else {
-            delta_b += GROWTH_RATE;
-        }
-
-        if a.o2_mut == patient.bacteria.o2_mut {
-
-            if i == 2 {
-
-                println!("o2 matches");
+    
+            if a.o2_mut == patient.bacteria.o2_mut {
+    
+                delta_b -= DIMINISH_RATE;
+    
+            } else {
+                delta_b += GROWTH_RATE;
             }
-            delta_b -= DIMINISH_RATE;
-
-        } else {
-            delta_b += GROWTH_RATE;
-        }
-
-        let dt = time.delta_seconds();
-
-        temp[i] = delta_b;
-
-        patient.bacteria_num += delta_b * dt;
-
-        if patient.bacteria_num <= 0.0 {
-            vec.push(i);
+    
+            let dt = time.delta_seconds();
+    
+            temp[i] = delta_b;
+    
+            patient.bacteria_num += delta_b * dt;
+    
+            if patient.bacteria_num <= 0.0 {
+                vec.push(i);
+            } else if patient.bacteria_num >= 120.0 {
+                println!("loser");
+                gs.set(GameState::Lose);
+            }
         }
     }
 
     for i in vec {
-        println!("removing patient {}. bact_num: {}", i, patients.patients[i].bacteria_num);
         patients.remove_patient(i);
     }
 
-    println!("{}, {}", temp[patients.get_patient_num().unwrap()], patients.get_patient_num().unwrap());
+    if let Some(a) = patients.get_patient_num() {
+
+        println!("{}, {}", temp[a], patients.get_patient_num().unwrap());
+    } else {
+        println!("winner");
+        gs.set(GameState::Win);
+    }
 
 }
 
