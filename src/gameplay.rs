@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{GameState, BACKGROUND_COLOUR, SCREEN_CENTRE, startup::GameTextures, update_patient::UpdatePlugin, patients::PatientRes, ui::{MyButton, Slider, ButtonAction, SliderType}};
+use crate::{GameState, BACKGROUND_COLOUR, SCREEN_CENTRE, startup::GameTextures, update_patient::UpdatePlugin, patients::PatientRes, ui::{MyButton, Slider, ButtonAction, SliderType}, systems::despawn_everything};
 use rand::Rng;
 
 pub struct GameplayPlugin;
@@ -9,7 +9,11 @@ impl Plugin for GameplayPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_systems(OnEnter(GameState::Gameplay), (setup_camera, setup_sprites, add_patient))
-            .add_systems(Update, display_bacteria.run_if(in_state(GameState::Gameplay)))
+            .add_systems(Update, (display_bacteria, update_rgbt).run_if(in_state(GameState::Gameplay)))
+            .add_systems(OnExit(GameState::Gameplay), despawn_everything)
+            .add_systems(OnExit(GameState::Menu), despawn_everything)
+            .add_systems(OnExit(GameState::Lose), despawn_everything)
+            .add_systems(OnExit(GameState::Win), despawn_everything)
             .add_plugins(UpdatePlugin)
             .insert_resource(PatientRes::new())
             ;
@@ -132,6 +136,9 @@ fn add_patient (
             },
             ..default()
         },
+        RBTGBT {
+            player: 0,
+        }
     ));
 
     cmd.spawn((
@@ -143,6 +150,9 @@ fn add_patient (
             },
             ..default()
         },
+        RBTGBT {
+            player: 1,
+        }
     ));
 
     cmd.spawn((
@@ -154,7 +164,26 @@ fn add_patient (
             },
             ..default()
         },
+        RBTGBT {
+            player: 2,
+        }
     ));
+}
+
+fn update_rgbt (
+    mut q: Query<(&mut Handle<Image>, &RBTGBT)>,
+    pts: Res<PatientRes>,
+    gt: Res<GameTextures>,
+) {
+
+    for (mut s, r) in q.iter_mut() {
+
+        if pts.patients[r.player].is_none() {
+            *s = gt.green_light.clone()
+        }
+
+    }
+
 }
 
 fn setup_camera (

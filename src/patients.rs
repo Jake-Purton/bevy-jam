@@ -163,10 +163,13 @@ impl PatientRes {
         PatientRes { patients: Vec::new(), patient_num: None, total: 0 }
     }
 
-    pub fn next_patient(&mut self) {
-        if self.patients.len() >= 1 {
+    pub fn next_patient(&mut self) {            
+        for _ in 0..3 {
             
             self.patient_num = Some((self.patient_num.unwrap() + 1) % self.patients.len());
+            if self.patients[self.patient_num.unwrap()].is_some() {
+                break;
+            }
         }
     }
 
@@ -194,14 +197,21 @@ impl PatientRes {
 
     pub fn remove_patient(&mut self, a: usize) {
 
-        self.patients.remove(a);
-        let b = self.patients.len();
+        self.patients[a] = None;
 
-        if self.patient_num.unwrap() >= a {
+        let mut vec = Vec::new();
+
+        for (i, b) in self.patients.iter().enumerate() {
+            if b.is_some() {
+                vec.push(i);
+            }
+        }
+
+        if !vec.contains(&self.patient_num.unwrap()) {
             self.patient_num = Some(0)
         }
 
-        if b == 0 {
+        if vec.len() == 0 {
             self.patient_num = None
         }
 

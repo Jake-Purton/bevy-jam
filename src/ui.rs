@@ -49,7 +49,7 @@ fn button_click_system (
         let posx = position.x - 0.5 * WINDOW_SIZE.x;
         let posy = -(position.y - 0.5 * WINDOW_SIZE.y);
 
-        let pos = Vec2::new(posx, posy - 20.0);
+        let pos = Vec2::new(posx, posy/* -30.*/);
 
 
         for mut button in buttons.iter_mut() {
@@ -88,30 +88,35 @@ fn button_click_system (
 
 fn move_slider (
     mut patients: ResMut<PatientRes>,
-    mut sliders: Query<(&mut Transform, &Slider)>
+    mut sliders: Query<(&mut Transform, &Slider)>,
+    mut gs: ResMut<NextState<GameState>>,
 ) {
 
-    let p = patients.get_patient().unwrap();
+    if let Some(p) = patients.get_patient() {
 
-    for mut slider in sliders.iter_mut() {
-        match slider.1.stype {
-            SliderType::Ph => {
-                slider.0.translation.y = p.ph;
-            },
-            SliderType::O2 => {
-                slider.0.translation.y = p.o2;
+        for mut slider in sliders.iter_mut() {
+            match slider.1.stype {
+                SliderType::Ph => {
+                    slider.0.translation.y = p.ph;
+                },
+                SliderType::O2 => {
+                    slider.0.translation.y = p.o2;
+                    
+                },
+                SliderType::Temp => {
+                    slider.0.translation.y = p.temp;
+                    
+                },
+                SliderType::Humidity => {
+                    slider.0.translation.y = p.humidity;
                 
-            },
-            SliderType::Temp => {
-                slider.0.translation.y = p.temp;
-                
-            },
-            SliderType::Humidity => {
-                slider.0.translation.y = p.humidity;
-            
-            },
+                },
+            }
         }
+    } else {
+        gs.set(GameState::Win)
     }
+
 }
 
 fn slider_system (
@@ -127,7 +132,7 @@ fn slider_system (
             let posx = position.x - 0.5 * WINDOW_SIZE.x;
             let posy = -(position.y - 0.5 * WINDOW_SIZE.y);
     
-            let mut pos = Vec2::new(posx, posy - 30.);
+            let mut pos = Vec2::new(posx, posy/* -30.*/);
 
             for (min, max, stype) in SLIDER_POSITIONS {
 
@@ -138,16 +143,24 @@ fn slider_system (
 
                     match stype {
                         SliderType::Ph => {
-                            patients.get_patient().unwrap().ph = pos.y;
+                            if let Some(p) = patients.get_patient() {
+                                p.ph = pos.y;
+                            }
                         },
                         SliderType::O2 => {
-                            patients.get_patient().unwrap().o2 = pos.y;
+                            if let Some(p) = patients.get_patient() {
+                                p.o2 = pos.y;
+                            }
                         },
                         SliderType::Temp => {
-                            patients.get_patient().unwrap().temp = pos.y;
+                            if let Some(p) = patients.get_patient() {
+                                p.temp = pos.y;
+                            }
                         },
                         SliderType::Humidity => {
-                            patients.get_patient().unwrap().humidity = pos.y;
+                            if let Some(p) = patients.get_patient() {
+                                p.humidity = pos.y;
+                            }
                         },
                     }
 
